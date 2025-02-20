@@ -79,7 +79,6 @@ const Navbar = () => {
             ))}
           </ul>
         </div>
-        {/* Logo / Site Title */}
         <NavLink to="/" className="text-lg md:text-xl text-primary">
           Get Sh*t Done
         </NavLink>
@@ -97,7 +96,7 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="navbar-end flex items-center space-x-5">
+      <div className="navbar-end flex items-center space-x-2 md:space-x-5">
         <button onClick={toggleDarkMode} className="transition">
           {isDarkMode ? (
             <FaSun className="text-2xl text-yellow-400" />

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
+import AuthContext from "../../Contexts/AuthContext";
 
 const Hero = () => {
+    const { user } = useContext(AuthContext);
     return (
         <div className="min-h-screen bg-lightBackground dark:bg-darkBackground flex flex-col">
             <nav>
@@ -17,7 +19,7 @@ const Hero = () => {
                     organized, and productive.
                 </p>
                 <Link
-                    to="/tasks"
+                    to={user ? "/tasks" : "/login"}
                     className="px-8 py-3 bg-primary text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors duration-200"
                 >
                     Get Started

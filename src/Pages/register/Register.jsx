@@ -29,7 +29,7 @@ const Register = () => {
             });
             axiosPB.post("/users", user)
             navigate('/');
-            console.log("User created:", userCredential.user);
+            // console.log("User created:", userCredential.user);
         } catch (error) {
             console.error("Error during registration:", error);
         } finally {

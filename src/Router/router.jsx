@@ -4,6 +4,7 @@ import Login from "../Pages/login/Login";
 import Register from "../Pages/register/Register";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 import Tasks from "../Pages/tasks/Tasks";
+import Error from "../Pages/error/Error";
 export const router = createBrowserRouter([
     {
       path: "/",
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
     {
       path:"/register",
       element:<Register></Register>
+    },
+    {
+      path:'*',
+      element:<Error></Error>
     }
   ]);
 

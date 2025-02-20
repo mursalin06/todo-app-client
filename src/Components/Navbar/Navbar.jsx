@@ -1,59 +1,61 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import AuthContext from '../../Contexts/AuthContext';
 import Swal from 'sweetalert2';
 
 const Navbar = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem("theme") === "dark");
   const { user, logOut } = useContext(AuthContext);
-  // console.log(user)
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+  }, [isDarkMode]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
   };
 
-  // Define navigation links
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Tasks', path: '/tasks' },
+    { name: 'Tasks', path: user ? '/tasks' : '/login' },
   ];
 
-  // Function to determine classes for active/inactive nav links
   const linkClasses = ({ isActive }) =>
-    `cursor-pointer text-lightText dark:text-darkText hover:text-primary transition-colors duration-200 border-b-2 ${isActive ? 'border-primary' : 'border-transparent'
+    `cursor-pointer text-lightText dark:text-darkText hover:text-primary transition-colors duration-200 border-b-2 ${
+      isActive ? 'border-primary' : 'border-transparent'
     }`;
 
-    const handleLogOut = () => {
-      logOut()
+  const handleLogOut = () => {
+    logOut()
       .then(() => {
-          Swal.fire({
-              title: "Congrats!",
-              text: "Logged out successfully!",
-              icon: "success"
-          });
+        Swal.fire({
+          title: "Logged Out",
+          text: "You have successfully logged out!",
+          icon: "success"
+        });
       })
       .catch((err) => {
-          // console.log(err);
-          Swal.fire({
-              title: "Ohh Crap!",
-              text: "Failed to Log Out",
-              icon: "error"
-          });
-      })
-    }
+        console.log(err);
+        Swal.fire({
+          title: "Error",
+          text: "Failed to log out",
+          icon: "error"
+        });
+      });
+  };
 
   return (
-    <div className="navbar bg-base-300 dark:bg-darkBackground px-6 py-2">
+    <div className="navbar bg-base-300 dark:bg-darkBackground px-2 md:px-6 py-2">
       <div className="navbar-start">
         {/* Mobile Dropdown */}
         <div className="dropdown">
-          <label tabIndex={0} className="btn btn-ghost lg:hidden">
+          <label tabIndex={0} className="btn btn-ghost text-primary lg:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -61,17 +63,12 @@ const Navbar = () => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 dark:bg-darkCardBackground rounded-box mt-3 w-52 p-2 shadow text-lightText dark:text-darkText"
+            className="menu menu-sm dropdown-content bg-base-100 dark:bg-darkCardBackground rounded-box mt-3 w-32 p-2 shadow text-lightText dark:text-darkText"
           >
             {navLinks.map((link) => (
               <li key={link.name}>
@@ -83,13 +80,11 @@ const Navbar = () => {
           </ul>
         </div>
         {/* Logo / Site Title */}
-        <NavLink
-          to="/"
-          className="text-xl text-primary "
-        >
+        <NavLink to="/" className="text-lg md:text-xl text-primary">
           Get Sh*t Done
         </NavLink>
       </div>
+
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           {navLinks.map((link) => (
@@ -101,34 +96,30 @@ const Navbar = () => {
           ))}
         </ul>
       </div>
-      <div className="navbar-end">
-        <div className='flex items-center space-x-5'>
-        <button onClick={toggleDarkMode} className="">
+
+      <div className="navbar-end flex items-center space-x-5">
+        <button onClick={toggleDarkMode} className="transition">
           {isDarkMode ? (
             <FaSun className="text-2xl text-yellow-400" />
           ) : (
             <FaMoon className="text-2xl text-gray-700" />
           )}
         </button>
-        {
-          !user ? <div className=''>
-            <Link to="/login">
-              <button className='btn bg-primary text-white'>Login</button>
-            </Link>
-          </div>: <div className=''>
-            <p>
-              <button onClick={handleLogOut} className='btn btn-sm bg-red-500 text-white'>Log Out</button>
-            </p>
-          </div>
-        }
-          {
-            user ? <div className="avatar">
-            <div className="ring-primary ring-offset-base-100 w-12 h-12 rounded-full ring ring-offset-2">
-              <img className='w-full h-full'  src={user?.photoURL} />
+
+        {!user ? (
+          <Link to="/login">
+            <button className="btn bg-primary text-white">Login</button>
+          </Link>
+        ) : (
+          <>
+            <button onClick={handleLogOut} className="btn btn-sm bg-red-500 text-white">Log Out</button>
+            <div className="avatar">
+              <div className="ring-primary ring-offset-base-100 w-12 h-12 rounded-full ring ring-offset-2">
+                <img className="w-full h-full" src={user?.photoURL} alt="User Avatar" />
+              </div>
             </div>
-          </div> : ""
-          }
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

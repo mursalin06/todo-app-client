@@ -27,6 +27,8 @@ const Tasks = () => {
             setTasks(res.data);
         } catch (error) {
             console.error("Failed to fetch tasks:", error);
+        } finally {
+            setLoading(false);
         }
     };
 

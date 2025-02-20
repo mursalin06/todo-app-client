@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AuthContext from "./AuthContext";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
 import app from "../Firebase/firebase.init";
 
 
@@ -9,12 +9,20 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     const auth = getAuth(app);
+
     // create a new user
     const createUser = async (email, password) => {
         setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password)
             .finally(() => setLoading(false))
     }
+
+    const updateUserProfile = (name, photo) => {
+        return updateProfile(auth.currentUser, {
+          displayName: name,
+          photoURL: photo,
+        });
+      };
 
 
 
@@ -26,6 +34,7 @@ const AuthProvider = ({ children }) => {
         loading,
         user,
         setLoading,
+        updateUserProfile
 
     }
 

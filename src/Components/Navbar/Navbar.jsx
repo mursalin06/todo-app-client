@@ -21,9 +21,7 @@ const Navbar = () => {
   // Define navigation links
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Tasks', path: '/tasks' },
   ];
 
   // Function to determine classes for active/inactive nav links
@@ -121,14 +119,15 @@ const Navbar = () => {
             <p>
               <button onClick={handleLogOut} className='btn btn-sm bg-red-500 text-white'>Log Out</button>
             </p>
-            <div className="avatar">
-            <div className="ring-primary ring-offset-base-100 w-12 h-12 md:w-14 md:h-14 rounded-full ring ring-offset-2">
-              <img className='w-full h-full'  src={user?.photoURL} />
-            </div>
-          </div>
           </div>
         }
-          
+          {
+            user ? <div className="avatar">
+            <div className="ring-primary ring-offset-base-100 w-12 h-12 rounded-full ring ring-offset-2">
+              <img className='w-full h-full'  src={user?.photoURL} />
+            </div>
+          </div> : ""
+          }
         </div>
       </div>
     </div>

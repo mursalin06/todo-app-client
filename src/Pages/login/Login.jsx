@@ -162,12 +162,7 @@ const Login = () => {
             onClick={handleGoogleSignIn}
             className="flex items-center space-x-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 transition-colors duration-200"
           >
-            {/* <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M21.35 11.1c0-.76-.07-1.49-.2-2.2H12v4.2h5.8c-.25 1.34-1 2.48-2.1 3.24v2.7h3.4c2-1.84 3.2-4.56 3.2-7.74z" />
-              <path d="M12 22c2.7 0 4.98-.9 6.64-2.43l-3.4-2.7c-.94.63-2.15 1-3.24 1-2.48 0-4.58-1.67-5.32-3.91H3v2.45C4.66 20.92 8.05 22 12 22z" />
-              <path d="M6.68 13.09c-.2-.6-.32-1.25-.32-1.91s.12-1.31.32-1.91V7.83H3V10c0 1.04.24 2.04.68 3.09l3-2z" />
-              <path d="M12 4.5c1.47 0 2.8.5 3.83 1.48l2.87-2.87C16.98 2.23 14.63 1 12 1 8.05 1 4.66 2.08 3 4v2.45h3.68C7.42 5.17 9.52 4.5 12 4.5z" />
-            </svg> */}
+          
             <FaGoogle></FaGoogle>
             <span>Sign in with Google</span>
           </button>

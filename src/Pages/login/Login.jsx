@@ -4,47 +4,78 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../../Contexts/AuthContext';
 import Swal from 'sweetalert2';
 import { FaGoogle } from 'react-icons/fa';
+import Navbar from '../../Components/Navbar/Navbar';
+import useAxios from '../../hooks/useAxios';
 
 const Login = () => {
-  const { login, googleSignIn } = useContext(AuthContext);
+  const { login, googleSignIn, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const axiosPB = useAxios();
 
   const onSubmit = async (values, { setSubmitting }) => {
-    console.log('Logging in with:', values);
     try {
+        const userCredential = await login(values.email, values.password);
+        const loggedInUser = userCredential.user;
+        setUser({
+            uid: loggedInUser?.uid,
+            email: loggedInUser?.email,
+            name: loggedInUser?.displayName || values.email.split('@')[0],
+            photoURL: loggedInUser?.photoURL || '',
+        });
         Swal.fire({
             title: "Great job!",
             text: "Login successful :)",
             icon: "success"
-          });
-          navigate('/');
-      const userCredential = await login(values.email, values.password);
-      console.log('User logged in:', userCredential.user);
+        });
+        navigate('/');
     } catch (error) {
         Swal.fire({
             title: "Oh No!",
             text: "Something went wrong :(",
             icon: "error"
-          });
-      console.error('Error during login:', error);
+        });
+        console.error('Error during login:', error);
     } finally {
-      setSubmitting(false);
+        setSubmitting(false);
     }
-  };
+};
+
 
   const handleGoogleSignIn = async () => {
     try {
-      const userCredential = await googleSignIn();
-      console.log('User logged in with Google:', userCredential.user);
-      // Optionally, redirect or update state as needed.
+        const userCredential = await googleSignIn();
+        const loggedInUser = userCredential.user;
+        const userData = {
+            uid: loggedInUser?.uid,
+            email: loggedInUser?.email,
+            name: loggedInUser?.displayName,
+            photoURL: loggedInUser?.photoURL,
+        };
+        setUser(userData); 
+        axiosPB.post('/users', userData);
+        Swal.fire({
+            title: "Great job!",
+            text: "Login successful :)",
+            icon: "success"
+        });
+        navigate('/');
     } catch (error) {
-      console.error('Error during Google sign in:', error);
-      // Optionally, show error feedback to the user.
+        console.error('Error during Google sign-in:', error);
+        Swal.fire({
+            title: "Oh Crap!",
+            text: "Login unsuccessful :(",
+            icon: "error"
+        });
     }
-  };
+};
+
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-lightBackground dark:bg-darkBackground transition-colors duration-300">
+    <div>
+        <nav className='sticky top-0 z-50 border-b border-b-gray-700'>
+            <Navbar></Navbar>
+        </nav>
+        <div className="min-h-[calc(100vh-70px)] flex items-center justify-center bg-lightBackground dark:bg-darkBackground transition-colors duration-300">
       <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-darkCardBackground rounded-xl shadow-lg transition-colors duration-300">
         <h2 className="text-center text-3xl font-bold text-lightText dark:text-darkText">
           Sign in to your account
@@ -142,6 +173,7 @@ const Login = () => {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

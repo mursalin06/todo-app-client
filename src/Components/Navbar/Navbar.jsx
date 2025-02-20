@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FaMoon, FaSun } from 'react-icons/fa';
+import AuthContext from '../../Contexts/AuthContext';
+import Swal from 'sweetalert2';
 
 const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { user, logOut } = useContext(AuthContext);
+  // console.log(user)
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -24,9 +28,27 @@ const Navbar = () => {
 
   // Function to determine classes for active/inactive nav links
   const linkClasses = ({ isActive }) =>
-    `cursor-pointer text-lightText dark:text-darkText hover:text-primary transition-colors duration-200 border-b-2 ${
-      isActive ? 'border-primary' : 'border-transparent'
+    `cursor-pointer text-lightText dark:text-darkText hover:text-primary transition-colors duration-200 border-b-2 ${isActive ? 'border-primary' : 'border-transparent'
     }`;
+
+    const handleLogOut = () => {
+      logOut()
+      .then(() => {
+          Swal.fire({
+              title: "Congrats!",
+              text: "Logged out successfully!",
+              icon: "success"
+          });
+      })
+      .catch((err) => {
+          // console.log(err);
+          Swal.fire({
+              title: "Ohh Crap!",
+              text: "Failed to Log Out",
+              icon: "error"
+          });
+      })
+    }
 
   return (
     <div className="navbar bg-base-300 dark:bg-darkBackground px-6 py-2">
@@ -65,7 +87,7 @@ const Navbar = () => {
         {/* Logo / Site Title */}
         <NavLink
           to="/"
-          className="text-xl text-lightText dark:text-darkText"
+          className="text-xl text-primary "
         >
           Get Sh*t Done
         </NavLink>
@@ -82,17 +104,31 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
+        <div className='flex items-center space-x-5'>
         <button onClick={toggleDarkMode} className="">
           {isDarkMode ? (
             <FaSun className="text-2xl text-yellow-400" />
           ) : (
-            <FaMoon className="text-2xl text-gray-500" />
+            <FaMoon className="text-2xl text-gray-700" />
           )}
         </button>
-        <div className='ml-4'>
-          <Link to="/login">
-        <button className='btn bg-primary text-white'>Login</button>
-          </Link>
+        {
+          !user ? <div className=''>
+            <Link to="/login">
+              <button className='btn bg-primary text-white'>Login</button>
+            </Link>
+          </div>: <div className=''>
+            <p>
+              <button onClick={handleLogOut} className='btn btn-sm bg-red-500 text-white'>Log Out</button>
+            </p>
+            <div className="avatar">
+            <div className="ring-primary ring-offset-base-100 w-12 h-12 md:w-14 md:h-14 rounded-full ring ring-offset-2">
+              <img className='w-full h-full'  src={user?.photoURL} />
+            </div>
+          </div>
+          </div>
+        }
+          
         </div>
       </div>
     </div>

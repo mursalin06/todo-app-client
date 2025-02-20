@@ -13,6 +13,7 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/vite": "^4.0.7",
     "antd": "^5.24.1",
+    "axios": "^1.7.9",
     "firebase": "^11.3.1",
     "formik": "^2.4.6",
     "localforage": "^1.10.0",

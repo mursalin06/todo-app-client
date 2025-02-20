@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { FaMoon, FaSun } from 'react-icons/fa';
 
 const Navbar = () => {
@@ -89,6 +89,11 @@ const Navbar = () => {
             <FaMoon className="text-2xl text-gray-500" />
           )}
         </button>
+        <div className='ml-4'>
+          <Link to="/login">
+        <button className='btn bg-primary text-white'>Login</button>
+          </Link>
+        </div>
       </div>
     </div>
   );
